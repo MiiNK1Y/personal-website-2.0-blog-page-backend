@@ -1,10 +1,18 @@
-#!./.env/bin/python3.12
+#!.env/bin python3.12
 
 from flask import Flask, request, jsonify
+from pathlib import Path
+from build_json import BuildJson
+
+# Where the blogposts are stored.
+POST_DIR = Path("./static/posts/")
 
 app = Flask(__name__)
 
-@app.route("/api/BlogViewImage", methods=["GET"])
+# For testing purpose to check if Flask serves images.
+# Flask does serve images, make this route dymaic
+# so that the request can get spesiffic image if it exists.
+@app.route("/blog/api/BlogViewImage", methods=["GET"])
 def BlogViewImage():
     if request.method == "GET":
         return """
@@ -12,14 +20,7 @@ def BlogViewImage():
             <img src='http://localhost:5000/static/image.jpeg' width='500'>
             """
 
-@app.route("/api/AllBlogPosts", methods=["GET"])
-def AllBlogPosts():
-    if request.method == "GET":
-        return """
-            <p>Here, we are going to compose all<br>blog posts found on the server!</p>
-            """
-
-@app.route("/api/AllBlogPostsData", methods=["GET"])
+@app.route("/blog/api/AllBlogPostsData", methods=["GET"])
 def BlogPostsData():
     if request.method == "GET":
-        return jsonify({"some": "data", "goes": "here"})
+        return jsonify(BuildJson(POST_DIR).json())
