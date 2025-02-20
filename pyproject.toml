@@ -1,0 +1,12 @@
+[project]
+name = "blog"
+version = "0.0.1"
+description = "A backend for serving static sites and JSON to the frontend"
+dependencies = [
+  "flask",
+  "bs4",
+]
+
+[build-system]
+requires = ["flit_core<4"]
+build-backend = "flit_core.buildapi"
