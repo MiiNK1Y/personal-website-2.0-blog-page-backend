@@ -1,0 +1,10 @@
+*.venv/
+*__pycache__/
+
+.git/
+blog/
+
+pyproject.toml
+
+README.md
+.gitignore
