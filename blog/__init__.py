@@ -1,37 +1,60 @@
 # Native Python libs.
 import os
-from pathlib import Path
 
-# External dependencies with PIP.
-from flask import Flask, render_template_string
+# External dependencies through PIP.
+from flask import Flask, render_template
 
 # Local modules.
 from .post_info import PostJson
 
-# The posts are collected togheter with other templates.
-# NOTE: NOT RELATIVE TO THE INSTANCE, THIS IS AN INDEPENDENT DIRECTORY.
-TEMPLATE_DIR = Path("./templates/")
+
+# Store the template (post) files outside of the PIP package, for ease of access to posts.
+TEMPLATE_DIR = os.path.abspath("./templates/")
+
+# Same for the static files, where thumbnail images are stored.
+STATIC_DIR = os.path.abspath("./static/")
 
 
 def create_app():
-    app = Flask(__name__, template_folder=TEMPLATE_DIR)
-
-    @app.route("/blog/all_posts")
-    def all_posts():
-        t = os.listdir(TEMPLATE_DIR)
-        f = [os.path.join(TEMPLATE_DIR, f) for f in t if f.startswith("post")]
-        p = [PostJson(i).get_json_data() for i in f]
-
-        return p  # 'jsonify()' runs on default with 'list' and 'dict' types in Flask.
-
-    @app.route("/blog/posts/<post>")
-    def post(post):
-        post = open(os.path.join(TEMPLATE_DIR, post + ".html"), "r").read()
-        return render_template_string(post)
+    app = Flask(
+        __name__,
+        static_url_path="",
+        static_folder=STATIC_DIR,
+        template_folder=TEMPLATE_DIR,
+    )
 
     @app.errorhandler(404)
     def not_found(error):
-        error_html = open(os.path.join(TEMPLATE_DIR, "error.html"), "r").read()
-        return render_template_string(error_html), 404
+        return render_template("error.html"), 404
+
+    @app.route("/blog/posts/<post>")
+    def post(post):
+        return render_template(f"{post}.html")
+
+    @app.route("/blog/all_posts")
+    def all_posts():
+        """
+        Return all wanted meta-data from each post in the template directory.
+        """
+
+        # Make list of all the FILES in the set template directory.
+        files = os.listdir(TEMPLATE_DIR)
+
+        # Sift out all the non-post template files.
+        posts = [
+            os.path.join(TEMPLATE_DIR, file)
+            for file in files
+            if file.startswith("post")
+        ]
+
+        # Get all the raw HTML data from each post, rendering Jinja template data while at it.
+        html = [render_template(os.path.basename(post)) for post in posts]
+
+        # Find all post meta-data in each post, collecting them in a dict (json).
+        json = [PostJson(data).get_json_data() for data in html]
+
+        # 'jsonify()' runs on default with 'list' and 'dict' types in Flask.
+        # So we can simply return the dict and it will be auto-formated.
+        return json
 
     return app
