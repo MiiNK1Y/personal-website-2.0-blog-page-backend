@@ -3,17 +3,18 @@ import os
 from pathlib import Path
 
 # External dependencies with PIP.
-from flask import Flask, render_template
+from flask import Flask, render_template_string
 
 # Local modules.
 from .post_info import PostJson
 
 # The posts are collected togheter with other templates.
-TEMPLATE_DIR = Path("blog/templates/")
+# NOTE: NOT RELATIVE TO THE INSTANCE, THIS IS AN INDEPENDENT DIRECTORY.
+TEMPLATE_DIR = Path("./templates/")
 
 
 def create_app():
-    app = Flask(__name__, instance_relative_config=True)
+    app = Flask(__name__, template_folder=TEMPLATE_DIR)
 
     @app.route("/blog/all_posts")
     def all_posts():
@@ -25,11 +26,12 @@ def create_app():
 
     @app.route("/blog/posts/<post>")
     def post(post):
-        return render_template(f"{post}.html")
+        post = open(os.path.join(TEMPLATE_DIR, post + ".html"), "r").read()
+        return render_template_string(post)
 
     @app.errorhandler(404)
     def not_found(error):
-        return render_template("error.html"), 404
+        error_html = open(os.path.join(TEMPLATE_DIR, "error.html"), "r").read()
+        return render_template_string(error_html), 404
 
     return app
-
