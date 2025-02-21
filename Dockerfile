@@ -2,9 +2,10 @@ FROM python:3
 
 WORKDIR /usr/src/app
 
-COPY requirements.txt
+COPY . .
+
 RUN pip install --no-cache-dir -r requirements.txt
 
-copy . .
+EXPOSE 8000:8000
 
-CMD ["python", "-m", "gunicorn", "-w", "4", "'blog:create_app()'", "-d"]
+CMD ["python", "-m", "gunicorn", "-b", "0.0.0.0:8000", "-w", "4", "blog:create_app()"]
