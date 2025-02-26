@@ -20,7 +20,11 @@ STATIC_DIR = os.path.abspath("./static/")
 CORS_ORIGINS = [
     "https://alnyk.net",
     "https://alnyk.pages.dev",
+
+    # FOR DEVELOPMENT ONLY, REMOVE WHEN BUILDING CONTAINER.
     "http://192.168.1.107:5173",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
 ]
 
 
