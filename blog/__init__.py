@@ -49,7 +49,12 @@ def create_app():
         # Convert dash-case string from url to snake_case for filename.
         post = post.replace("-", "_")
 
-        return render_template(f"{post}.html")
+        try:
+            return render_template(f"{post}.html")
+
+        # The post might not exists, then return the error.html instead.
+        except:
+            return render_template("error.html")
 
     @app.route("/blog/all_posts")
     def all_posts():
