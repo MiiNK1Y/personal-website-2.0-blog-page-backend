@@ -1,5 +1,5 @@
 # Standard libs.
-import os
+import os, json
 
 # Dependencies through PIP.
 from dotenv import dotenv_values
@@ -22,7 +22,9 @@ TEMPLATE_DIR = os.path.abspath("./templates/")
 STATIC_DIR = os.path.abspath("./static/")
 
 # Allowed origins for Cross-Origin-Resource-Sharing
-CORS_ORIGINS = config["CORS_ORIGINS"]
+# Load the list from the .env as a single string \
+# then convert it to a list with json.
+CORS_ORIGINS = json.loads(config["CORS_ORIGINS"])
 
 
 def create_app():
