@@ -1,17 +1,20 @@
-# Native Python libs.
+# Standard libs.
 import os
 
-# External dependencies through PIP.
+# Dependencies through PIP.
+from dotenv import dotenv_values
 from flask import Flask, render_template
 from flask_cors import CORS
-# For handeling TemplateNotFound error
 from jinja2 import TemplateNotFound
 
 # Local modules.
 from .post_info import PostJson
 
 
-# Store the template (post) files outside of the PIP package,
+# Load .env varibles
+config = dotenv_values(".env")
+
+# Store the template (post) files outside of the PIP package \
 # for ease of access to posts.
 TEMPLATE_DIR = os.path.abspath("./templates/")
 
@@ -19,15 +22,7 @@ TEMPLATE_DIR = os.path.abspath("./templates/")
 STATIC_DIR = os.path.abspath("./static/")
 
 # Allowed origins for Cross-Origin-Resource-Sharing
-CORS_ORIGINS = [
-    "https://alnyk.net",
-    "https://alnyk.pages.dev",
-
-    # FOR DEVELOPMENT ONLY, REMOVE WHEN BUILDING CONTAINER.
-    "http://192.168.1.107:5173",
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-]
+CORS_ORIGINS = config["CORS_ORIGINS"]
 
 
 def create_app():
@@ -51,10 +46,11 @@ def create_app():
         post = post.replace("-", "_")
 
         try:
-            return render_template(f"{post.replace('-', '_')}.html")
+            return render_template(f"{post}.html")
         except TemplateNotFound:
 
-            # Replace the initial dash-replacement for a whitespace instead.
+            # Replace the initial dash-replacement for a whitespace instead \
+            # for prettier rendering on the client.
             post = post.replace("_", " ")
 
             return render_template("error.html", post_name=f"{post}")
@@ -75,15 +71,15 @@ def create_app():
             if file.startswith("post")
         ]
 
-        # Get all the raw HTML data from each post,
+        # Get all the raw HTML data from each post, \
         # rendering Jinja template data while at it.
         html = [render_template(os.path.basename(post)) for post in posts]
 
-        # Find all post meta-data in each post,
+        # Find all post meta-data in each post, \
         # collecting them in a dict (json).
         json = [PostJson(data).get_json_data() for data in html]
 
-        # 'jsonify()' runs on default with 'list' and 'dict' types in Flask.
+        # 'jsonify()' runs on default with 'list' and 'dict' types in Flask. \
         # So we can simply return the dict and it will be auto-formatted.
         return json
 
