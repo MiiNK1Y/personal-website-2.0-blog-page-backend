@@ -4,6 +4,8 @@ import os
 # External dependencies through PIP.
 from flask import Flask, render_template
 from flask_cors import CORS
+# For handeling TemplateNotFound error
+from jinja2 import TemplateNotFound
 
 # Local modules.
 from .post_info import PostJson
@@ -45,16 +47,17 @@ def create_app():
 
     @app.route("/blog/posts/<post>")
     def post(post):
-
         # Convert dash-case string from url to snake_case for filename.
         post = post.replace("-", "_")
 
         try:
-            return render_template(f"{post}.html")
+            return render_template(f"{post.replace('-', '_')}.html")
+        except TemplateNotFound:
 
-        # The post might not exists, then return the error.html instead.
-        except:
-            return render_template("error.html")
+            # Replace the initial dash-replacement for a whitespace instead.
+            post = post.replace("_", " ")
+
+            return render_template("error.html", post_name=f"{post}")
 
     @app.route("/blog/all_posts")
     def all_posts():
