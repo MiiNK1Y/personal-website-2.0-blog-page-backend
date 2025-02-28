@@ -1,0 +1,14 @@
+services:
+  blog:
+    build: .
+    networks:
+      - cloudflared
+    expose:
+      - "8000"
+    ports: # use if it is necessary to expose the container to the host machine
+      - "8000:8000"
+
+networks:
+  cloudflared:
+    name: cloudflared
+    external: true
