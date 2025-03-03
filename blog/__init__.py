@@ -40,10 +40,25 @@ def create_app():
 
     @app.errorhandler(404)
     def not_found(error):
+        """
+        Returns HTML markup for an error-message for the requesting client.
+        """
+
         return render_template("error.html"), 404
 
     @app.route("/blog/posts/<post>")
     def post(post):
+        """
+        Returns HTML markup for a single post from the Jinja tamplate directory.
+
+        Example: /blog/posts/some-post-with-dashes
+
+        - The route uses parameter "post", in which the name of the wanted post is placed.
+        - The name of the post uses dashes ("-") in place of whitespaces.
+        - The dashes are converted to underscores ("_") when seeking for the wanted post.
+        - For the sake of convenience; the filename is the same as the title of the post (excluding ".html").
+        """
+
         # Convert dash-case string from url to snake_case for filename.
         post = post.replace("-", "_")
 
@@ -60,7 +75,47 @@ def create_app():
     @app.route("/blog/all_posts")
     def all_posts():
         """
-        Return all wanted meta-data from each post in the template directory.
+        Returns all relevant meta-data from each blog-post in the template directory in JSON format.
+
+        If a property is not utilized in the post, "None" will be used instead.
+
+        The endpoint returns an array with the following data for each object / blog-post:
+
+        title [str]
+            Title of the post.
+
+        tags [str]
+            Tags associated with the post, each tag prefixed by a pund ("#")
+            then ending with a comma before the next tag.
+
+            Example: #here, #goes, #some, #tags
+
+        description [str]
+            A short introduction to the post or some forewords.
+            Whatever relevant to introduce the theme of the post or to set the mood.
+
+        date-of-posting [str]
+            The date of which the post was published.
+
+            Format: dd-mm-yyyy.
+            Example: 31.12.2025
+
+        date-of-last-edit [str]
+            The date when the post was last edited; corrected spelling, other mistakes
+            or added / removed information.
+
+            Format: dd-mm-yyyy.
+            Example: 31.12.2025
+
+        post-url [str]
+            The URL route returning the blog-post HTML markup.
+
+            Example: https://[DOMAIN].net/blog/posts/some-post-with-dashes
+
+        preview-img-url [str]
+            The URL to the blog-post preview image.
+
+            Example: https://[DOMAIN].net/images/some-image.png
         """
 
         # Make list of all the FILES in the set template directory.
