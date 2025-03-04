@@ -53,10 +53,8 @@ def create_app():
 
         Example: /blog/posts/some-post-with-dashes
 
-        - The route uses parameter "post", in which the name of the wanted post is placed.
-        - The name of the post uses dashes ("-") in place of whitespaces.
-        - The dashes are converted to underscores ("_") when seeking for the wanted post.
-        - For the sake of convenience; the filename is the same as the title of the post (excluding ".html").
+        The route uses parameter "post", in which the name of the wanted post is placed.
+        The name of the post uses dashes ("-") in place of whitespaces.
         """
 
         # Convert dash-case string from url to snake_case for filename.
@@ -77,7 +75,7 @@ def create_app():
         """
         Returns all relevant meta-data from each blog-post in the template directory in JSON format.
 
-        If a property is not utilized in the post, "None" will be used instead.
+        If a property doesn't find a value; "None" will be used instead.
 
         The endpoint returns an array with the following data for each object / blog-post:
 

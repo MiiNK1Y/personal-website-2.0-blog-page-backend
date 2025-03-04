@@ -4,10 +4,8 @@ It returns either;
 - A JSON array with metadata for each blogpost.
 - HTML markup for a single post.
 
----
 # Usage
----
-Endpoint: **https://alnyk.net/blog/all_posts**
+Endpoint: **https://alnyk[.]net/blog/all_posts**
 
 Results in the following response:
 ```json
@@ -30,11 +28,12 @@ Results in the following response:
     "tags": "#here, #we, #store, #tags",
     "title": "Post four"
   },
+]
 ```
 > *This is demo-data and the actual response data might vary.*
 
 ---
-Endpoint: **https://alnyk.net/blog/posts/\[YOUR REQUESTED POST TITLE\]**
+Endpoint: **https://alnyk[.]net/blog/posts/[YOUR REQUESTED POST TITLE]**
 
 Results in a raw HTML response with the post itself.
 It follows simple HTML markup syntax and does not utilize some form of templating.
