@@ -10,6 +10,7 @@ class PostJson:
         # Create an instance of BeautifulSoup with the given file and the parser type.
         self._soup = BeautifulSoup(self._file, "html.parser")
 
+        # The tags (properties) BeautifulSoup will be looking for.
         self._post_info = {
             "title": None,
             "post-url": None,
@@ -31,7 +32,7 @@ class PostJson:
             if (key == "post-url"):
 
                 # Make the title url-friendly
-                self._post_info["post-url"] = self._post_info["title"].lower().replace(" ", "-")
+                self._post_infe["post-url"] = self._post_info["title"].lower().replace(" ", "-")
 
             # Get the first occurrence of the class (key) in the given file.
             elif (k := self._soup.select_one(f".{key}")):

@@ -5,7 +5,7 @@ services:
       - cloudflared
     expose:
       - "8000"
-    ports: # use if it is necessary to expose the container to the host machine
+    ports:
       - "8000:8000"
 
 networks:
