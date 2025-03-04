@@ -32,7 +32,7 @@ class PostJson:
             if (key == "post-url"):
 
                 # Make the title url-friendly
-                self._post_infe["post-url"] = self._post_info["title"].lower().replace(" ", "-")
+                self._post_info["post-url"] = self._post_info["title"].lower().replace(" ", "-")
 
             # Get the first occurrence of the class (key) in the given file.
             elif (k := self._soup.select_one(f".{key}")):
