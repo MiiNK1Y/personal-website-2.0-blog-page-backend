@@ -1,6 +1,6 @@
 [project]
 name = "blog"
-version = "0.0.1"
+version = "1.0.0"
 description = "A backend for serving static sites and JSON to the frontend"
 dependencies = [
   "flask",
